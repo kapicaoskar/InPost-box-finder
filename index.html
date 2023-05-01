@@ -25,7 +25,7 @@
             fetch(`https://api-shipx-pl.easypack24.net/v1/points?operator=INPOST&country=PL&post_code=${postCode}&max_distance=25000&limit=500&format=json&api_key=${apiKey}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.items < 1) return alert("Zly kod pocztowy")
+                    if (data.items < 1) return alert("Nie ma w okolicy zadnego paczkomatu!")
                     data.items.forEach(item => {
                         console.log(item.name)
                         console.log(item.address.line1, item.address.line2)
