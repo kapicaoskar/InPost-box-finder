@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>InPost Map Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://geowidget.inpost.pl/inpost-geowidget.css" />
+    <script src='https://geowidget.inpost.pl/inpost-geowidget.js' defer></script>
+</head>
+
+<body>
+    <div id="paczkomaty">
+    </div>
+    <input type="text" placeholder="Kod pocztowy" id="postCode">
+    <button onclick="submitPostal()">Sprawdz paczkomaty</button>
+    <button onclick="onMapLoad()">Uzyj mapy</button>
+    <script>
+        const language = "pl"
+        const geoApiKey = "geoApiKeyfrominpost"
+        const apiKey = 'ApiKeyfrominpost'
+        function submitPostal() {
+            const postCode = document.getElementById('postCode').value;
+            if (!postCode) return alert("Nie moze byc puste")
+            fetch(`https://api-shipx-pl.easypack24.net/v1/points?operator=INPOST&country=PL&post_code=${postCode}&max_distance=25000&limit=500&format=json&api_key=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items < 1) return alert("Zly kod pocztowy")
+                    data.items.forEach(item => {
+                        console.log(item.name)
+                        console.log(item.address.line1, item.address.line2)
+                        console.log(item.location_description)
+                        //Tutaj mozesz samemu zrobic np html element na podstawie informacji ktore dostajesz jesli chcesz zobaczyc co masz jeszcze uzyj console.log(data)
+                    })
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error('Błąd API Inpost:', error);
+                });
+        }
+
+        function onMapLoad() {
+            document.getElementById('paczkomaty').innerHTML = `        <inpost-geowidget onpoint="afterPointSelected" token=${geoApiKey} language=${language} config='parcelcollect'></inpost-geowidget>`
+        }
+
+
+        function afterPointSelected(point) {
+            console.log(point)
+            document.getElementById('paczkomaty').innerHTML = ``
+            document.getElementById('postCode').value = point.postal_code
+            //Tutaj mozesz manipulowac JSON z point i zrobic co chcesz z danymi danego punktu
+        };
+    </script>
+
+</body>
+
+</html>
