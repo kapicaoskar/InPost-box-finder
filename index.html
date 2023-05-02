@@ -19,7 +19,7 @@
         const language = "pl"
         const geoApiKey = "geoApiKeyfrominpost"
         const apiKey = 'ApiKeyfrominpost'
-        function submitPostal() {
+        const submitPostal = () => {
             const postCode = document.getElementById('postCode').value;
             if (!postCode) return alert("Nie moze byc puste")
             fetch(`https://api-shipx-pl.easypack24.net/v1/points?operator=INPOST&country=PL&post_code=${postCode}&max_distance=25000&limit=500&format=json&api_key=${apiKey}`)
@@ -39,12 +39,12 @@
                 });
         }
 
-        function onMapLoad() {
+        const onMapLoad = () => {
             document.getElementById('paczkomaty').innerHTML = `        <inpost-geowidget onpoint="afterPointSelected" token=${geoApiKey} language=${language} config='parcelcollect'></inpost-geowidget>`
         }
 
 
-        function afterPointSelected(point) {
+        const afterPointSelected = (point) => {
             console.log(point)
             document.getElementById('paczkomaty').innerHTML = ``
             document.getElementById('postCode').value = point.postal_code
